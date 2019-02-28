@@ -2,6 +2,7 @@
 using System.IO;
 using Couchbase.Lite;
 using UserProfileDemo.Core.Models;
+using UserProfileDemo.Core.Services;
 
 namespace UserProfileDemo.Core.Respositories
 {
@@ -18,7 +19,7 @@ namespace UserProfileDemo.Core.Respositories
                 {
                     _databaseConfig = new DatabaseConfiguration
                     {
-                        Directory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), 
+                        Directory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
                                         AppInstance.User.Username)
                     };
                 }
