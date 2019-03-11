@@ -104,7 +104,7 @@ namespace UserProfileDemo.Core.ViewModels
 
             var userProfile = await Task.Run(() =>
             {
-                var up = UserProfileRepository.GetUserProfile(UserProfileId);
+                var up = UserProfileRepository?.GetUserProfile(UserProfileId);
 
                 if (up == null)
                 {
@@ -140,9 +140,14 @@ namespace UserProfileDemo.Core.ViewModels
                 ImageData = ImageData
             };
 
-            UserProfileRepository.SaveUserProfile(userProfile);
+            bool? success = UserProfileRepository?.SaveUserProfile(userProfile);
 
-            return AlertService.ShowMessage(null, "Successfully updated profile!", "OK");
+            if (success.HasValue && success.Value)
+            {
+                return AlertService.ShowMessage(null, "Successfully updated profile!", "OK");
+            }
+
+            return AlertService.ShowMessage(null, "Error updating profile!", "OK");
         }
 
         async Task SelectImage()
@@ -157,12 +162,12 @@ namespace UserProfileDemo.Core.ViewModels
 
         void Logout()
         {
+            UserProfileRepository.Dispose();
+
             AppInstance.User = null;
 
             LogoutSuccessful?.Invoke();
             LogoutSuccessful = null;
         }
-
-        public override void Dispose() => UserProfileRepository.Dispose();
     }
 }

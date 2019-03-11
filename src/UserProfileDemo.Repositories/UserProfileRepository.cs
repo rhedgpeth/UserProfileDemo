@@ -1,4 +1,5 @@
-﻿using Couchbase.Lite;
+﻿using System;
+using Couchbase.Lite;
 using UserProfileDemo.Core.Respositories;
 using UserProfileDemo.Models;
 
@@ -13,39 +14,57 @@ namespace UserProfileDemo.Respositories
         {
             UserProfile userProfile = null;
 
-            var document = Database.GetDocument(userProfileId);
-
-            if (document != null)
+            try
             {
-                userProfile = new UserProfile
+                var document = Database.GetDocument(userProfileId);
+
+                if (document != null)
                 {
-                    Id = document.Id,
-                    Name = document.GetString("Name"),
-                    Email = document.GetString("Email"),
-                    Address = document.GetString("Address"),
-                    ImageData = document.GetBlob("ImageData")?.Content
-                };
+                    userProfile = new UserProfile
+                    {
+                        Id = document.Id,
+                        Name = document.GetString("Name"),
+                        Email = document.GetString("Email"),
+                        Address = document.GetString("Address"),
+                        ImageData = document.GetBlob("ImageData")?.Content
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"UserProfileRepository Exception: {ex.Message}");
             }
 
             return userProfile;
         }
 
-        public void SaveUserProfile(UserProfile userProfile)
+        public bool SaveUserProfile(UserProfile userProfile)
         {
-            if (userProfile != null)
+            try
             {
-                var mutableDocument = new MutableDocument(userProfile.Id);
-                mutableDocument.SetString("Name", userProfile.Name);
-                mutableDocument.SetString("Email", userProfile.Email);
-                mutableDocument.SetString("Address", userProfile.Address);
-
-                if (userProfile.ImageData != null)
+                if (userProfile != null)
                 {
-                    mutableDocument.SetBlob("ImageData", new Blob("image/jpeg", userProfile.ImageData));
-                }
+                    var mutableDocument = new MutableDocument(userProfile.Id);
+                    mutableDocument.SetString("Name", userProfile.Name);
+                    mutableDocument.SetString("Email", userProfile.Email);
+                    mutableDocument.SetString("Address", userProfile.Address);
 
-                Database.Save(mutableDocument);
+                    if (userProfile.ImageData != null)
+                    {
+                        mutableDocument.SetBlob("ImageData", new Blob("image/jpeg", userProfile.ImageData));
+                    }
+
+                    Database.Save(mutableDocument);
+
+                    return true;
+                }
             }
+            catch(Exception ex)
+            {
+                Console.WriteLine($"UserProfileRepository Exception: {ex.Message}");
+            }
+
+            return false;
         }
     }
 }

@@ -28,10 +28,7 @@ namespace UserProfileDemo.Core
 
         public Command(Action<object> execute)
         {
-            if (execute == null)
-                throw new ArgumentNullException(nameof(execute));
-
-            _execute = execute;
+            _execute = execute ?? throw new ArgumentNullException(nameof(execute));
         }
 
         public Command(Action execute) : this(o => execute())
@@ -42,10 +39,7 @@ namespace UserProfileDemo.Core
 
         public Command(Action<object> execute, Func<object, bool> canExecute) : this(execute)
         {
-            if (canExecute == null)
-                throw new ArgumentNullException(nameof(canExecute));
-
-            _canExecute = canExecute;
+            _canExecute = canExecute ?? throw new ArgumentNullException(nameof(canExecute));
         }
 
         public Command(Action execute, Func<bool> canExecute) : this(o => execute(), o => canExecute())
@@ -67,17 +61,8 @@ namespace UserProfileDemo.Core
 
         public event EventHandler CanExecuteChanged;
 
-        public void Execute(object parameter)
-        {
-            _execute(parameter);
-        }
+        public void Execute(object parameter) => _execute(parameter);
 
-        public void ChangeCanExecute()
-        {
-            EventHandler changed = CanExecuteChanged;
-
-            if (changed != null)
-                changed(this, EventArgs.Empty);
-        }
+        public void ChangeCanExecute() => CanExecuteChanged?.Invoke(this, EventArgs.Empty);
     }
 }

@@ -1,8 +1,6 @@
-﻿using System;
-
-namespace UserProfileDemo.Core.ViewModels
+﻿namespace UserProfileDemo.Core.ViewModels
 {
-    public abstract class BaseViewModel : BaseNotify, IDisposable
+    public abstract class BaseViewModel : BaseNotify
     {
         bool _isBusy;
         public bool IsBusy
@@ -10,7 +8,5 @@ namespace UserProfileDemo.Core.ViewModels
             get => _isBusy;
             set => SetPropertyChanged(ref _isBusy, value);
         }
-
-        public virtual void Dispose() { } 
     }
 }

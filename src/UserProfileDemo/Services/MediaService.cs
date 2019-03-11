@@ -10,7 +10,6 @@ namespace UserProfileDemo.Services
         public async Task<byte[]> PickPhotoAsync()
         {
             var result = await CrossMedia.Current.PickPhotoAsync();
-
             return result != null ? GetBytesFromStream(result.GetStream()) : null;
         }
 
