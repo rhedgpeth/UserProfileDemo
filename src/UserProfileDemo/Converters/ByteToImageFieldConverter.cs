@@ -10,18 +10,22 @@ namespace UserProfileDemo.Converters
         {
             ImageSource retSource = null;
 
-            if (value != null)
+            try
             {
-                byte[] imageAsBytes = (byte[])value;
-                retSource = ImageSource.FromStream(() => new MemoryStream(imageAsBytes));
+                if (value != null)
+                {
+                    retSource = ImageSource.FromStream(() => new MemoryStream((byte[])value));
+                }
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine($"ByteToImageFieldConverter Exception: {ex.Message}");
             }
 
             return retSource;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
+        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) 
+            => throw new NotImplementedException();
     }
 }

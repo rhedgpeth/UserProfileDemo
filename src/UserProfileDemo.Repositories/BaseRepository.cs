@@ -16,6 +16,11 @@ namespace UserProfileDemo.Respositories
             {
                 if (_databaseConfig == null)
                 {
+                    if (AppInstance.User?.Username == null)
+                    {
+                        throw new Exception($"Repository Exception: A valid user is required!");
+                    }
+
                     _databaseConfig = new DatabaseConfiguration
                     {
                         Directory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
@@ -45,6 +50,11 @@ namespace UserProfileDemo.Respositories
 
         protected BaseRepository(string databaseName)
         {
+            if (string.IsNullOrEmpty(databaseName))
+            {
+                throw new Exception($"Repository Exception: Database name cannot be null or empty!");
+            }
+
             DatabaseName = databaseName;
         }
 

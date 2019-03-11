@@ -16,10 +16,7 @@ namespace UserProfileDemo.Core
         /// <summary>
         /// Register the specified service with an instance
         /// </summary>
-        public static void Register<T>(T service)
-        {
-            services[typeof(T)] = new Lazy<object>(() => service);
-        }
+        public static void Register<T>(T service) => services[typeof(T)] = new Lazy<object>(() => service);
 
         /// <summary>
         /// Register the specified service for a class with a default constructor
@@ -32,18 +29,12 @@ namespace UserProfileDemo.Core
         /// <summary>
         /// Register the specified service with a callback to be invoked when requested
         /// </summary>
-        public static void Register<T>(Func<T> function)
-        {
-            services[typeof(T)] = new Lazy<object>(() => function());
-        }
+        public static void Register<T>(Func<T> function) => services[typeof(T)] = new Lazy<object>(() => function());
 
         /// <summary>
         /// Register the specified service with an instance
         /// </summary>
-        public static void Register(Type type, object service)
-        {
-            services[type] = new Lazy<object>(() => service);
-        }
+        public static void Register(Type type, object service) => services[type] = new Lazy<object>(() => service);
 
         /// <summary>
         /// Register the specified service with a callback to be invoked when requested
@@ -56,21 +47,16 @@ namespace UserProfileDemo.Core
         /// <summary>
         /// Resolves the type, throwing an exception if not found
         /// </summary>
-        public static T Resolve<T>(bool nullIsAcceptable = false)
-        {
-            return (T)Resolve(typeof(T), nullIsAcceptable);
-        }
+        public static T Resolve<T>(bool nullIsAcceptable = false) => (T)Resolve(typeof(T), nullIsAcceptable);
 
         /// <summary>
         /// Resolves the type, throwing an exception if not found
         /// </summary>
         public static object Resolve(Type type, bool nullIsAcceptable = false)
         {
-            //Non-scoped services
+            // Non-scoped services
             {
-                Lazy<object> service;
-
-                if (services.TryGetValue(type, out service))
+                if (services.TryGetValue(type, out Lazy<object> service))
                     return service.Value;
 
                 if (nullIsAcceptable) return null;
@@ -82,9 +68,6 @@ namespace UserProfileDemo.Core
         /// <summary>
         /// Clears the entire container
         /// </summary>
-        public static void Clear()
-        {
-            services.Clear();
-        }
+        public static void Clear() => services.Clear();
     }
 }

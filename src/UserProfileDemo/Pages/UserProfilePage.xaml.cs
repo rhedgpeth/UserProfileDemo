@@ -9,8 +9,6 @@ namespace UserProfileDemo.Pages
 {
     public partial class UserProfilePage : ContentPage
     {
-        UserProfileViewModel ViewModel { get; set; }
-
         public UserProfilePage(Action logoutSuccesful)
         {
             InitializeComponent();
@@ -20,14 +18,7 @@ namespace UserProfileDemo.Pages
             var alertService = ServiceContainer.Resolve<IAlertService>();
             var mediaService = ServiceContainer.Resolve<IMediaService>();
 
-            BindingContext = ViewModel = new UserProfileViewModel(userProfileRepository, alertService, mediaService, logoutSuccesful);
-        }
-
-        protected override void OnDisappearing()
-        {
-            base.OnDisappearing();
-
-            ViewModel.Dispose();
+            BindingContext = new UserProfileViewModel(userProfileRepository, alertService, mediaService, logoutSuccesful);
         }
     }
 }
