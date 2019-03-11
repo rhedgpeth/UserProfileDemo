@@ -1,12 +1,11 @@
 ﻿using System;
 using System.IO;
 using Couchbase.Lite;
-using UserProfileDemo.Core.Models;
-using UserProfileDemo.Core.Services;
+using UserProfileDemo.Core;
 
-namespace UserProfileDemo.Core.Respositories
+namespace UserProfileDemo.Respositories
 {
-    public abstract class BaseRepository 
+    public abstract class BaseRepository : IDisposable 
     {
         string DatabaseName { get; set; }
 
@@ -26,6 +25,7 @@ namespace UserProfileDemo.Core.Respositories
 
                 return _databaseConfig;
             }
+            set => _databaseConfig = value;
         }
 
         Database _database;
@@ -40,11 +40,19 @@ namespace UserProfileDemo.Core.Respositories
 
                 return _database;
             }
+            private set => _database = value;
         }
 
         protected BaseRepository(string databaseName)
         {
             DatabaseName = databaseName;
+        }
+
+        public void Dispose()
+        {
+            DatabaseConfig = null;
+            Database.Close();
+            Database = null;
         }
     }
 }

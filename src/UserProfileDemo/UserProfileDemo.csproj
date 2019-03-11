@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\UserProfileDemo.Core\UserProfileDemo.Core.csproj" />
+    <ProjectReference Include="..\UserProfileDemo.Repositories\UserProfileDemo.Repositories.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Converters\ByteToImageFieldConverter.xml" />

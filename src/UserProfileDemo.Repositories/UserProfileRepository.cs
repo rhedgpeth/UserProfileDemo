@@ -1,19 +1,12 @@
-﻿using System;
-using Couchbase.Lite;
-using UserProfileDemo.Core.Models;
+﻿using Couchbase.Lite;
+using UserProfileDemo.Core.Respositories;
+using UserProfileDemo.Models;
 
-namespace UserProfileDemo.Core.Respositories
+namespace UserProfileDemo.Respositories
 {
-    public class UserProfileRepository : BaseRepository
+    public sealed class UserProfileRepository : BaseRepository, IUserProfileRepository
     {
-        #region Properties
-
-        static readonly Lazy<UserProfileRepository> lazy = new Lazy<UserProfileRepository>(() => new UserProfileRepository());
-        public static UserProfileRepository Instance => lazy.Value;
-
-        #endregion
-
-        UserProfileRepository() : base("cbsample")
+        public UserProfileRepository() : base("cbsample")
         { }
 
         public UserProfile GetUserProfile(string userProfileId)

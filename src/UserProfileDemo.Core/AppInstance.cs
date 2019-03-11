@@ -1,4 +1,4 @@
-﻿using UserProfileDemo.Core.Models;
+﻿using UserProfileDemo.Models;
 
 namespace UserProfileDemo.Core
 {

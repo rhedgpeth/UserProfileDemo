@@ -1,15 +1,19 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using UserProfileDemo.Core.Models;
 using UserProfileDemo.Core.Respositories;
 using UserProfileDemo.Core.Services;
+using UserProfileDemo.Models;
 
 namespace UserProfileDemo.Core.ViewModels
 {
     public class UserProfileViewModel : BaseViewModel
     {
         Action LogoutSuccessful { get; set; }
+
+        IUserProfileRepository UserProfileRepository { get; set; }
+        IAlertService AlertService { get; set; }
+        IMediaService MediaService { get; set; }
 
         string UserProfileId => $"user::{AppInstance.User.Username}";
 
@@ -39,34 +43,6 @@ namespace UserProfileDemo.Core.ViewModels
         {
             get => _imageData;
             set => SetPropertyChanged(ref _imageData, value);
-        }
-
-        IAlertService _alertService;
-        IAlertService AlertService
-        {
-            get
-            {
-                if (_alertService == null)
-                {
-                    _alertService = ServiceContainer.Resolve<IAlertService>();
-                }
-
-                return _alertService;
-            }
-        }
-
-        IMediaService _mediaService;
-        IMediaService MediaService
-        {
-            get
-            {
-                if (_mediaService == null)
-                {
-                    _mediaService = ServiceContainer.Resolve<IMediaService>();
-                }
-
-                return _mediaService;
-            }
         }
 
         ICommand _saveCommand;
@@ -111,8 +87,12 @@ namespace UserProfileDemo.Core.ViewModels
             }
         }
 
-        public UserProfileViewModel(Action logoutSuccessful)
+        public UserProfileViewModel(IUserProfileRepository userProfileRepository, IAlertService alertService, 
+                                    IMediaService mediaService, Action logoutSuccessful)
         {
+            UserProfileRepository = userProfileRepository;
+            AlertService = alertService;
+            MediaService = mediaService;
             LogoutSuccessful = logoutSuccessful;
 
             LoadUserProfile();
@@ -124,7 +104,7 @@ namespace UserProfileDemo.Core.ViewModels
 
             var userProfile = await Task.Run(() =>
             {
-                var up = UserProfileRepository.Instance.GetUserProfile(UserProfileId);
+                var up = UserProfileRepository.GetUserProfile(UserProfileId);
 
                 if (up == null)
                 {
@@ -160,7 +140,7 @@ namespace UserProfileDemo.Core.ViewModels
                 ImageData = ImageData
             };
 
-            UserProfileRepository.Instance.SaveUserProfile(userProfile);
+            UserProfileRepository.SaveUserProfile(userProfile);
 
             return AlertService.ShowMessage(null, "Successfully updated profile!", "OK");
         }
@@ -182,5 +162,7 @@ namespace UserProfileDemo.Core.ViewModels
             LogoutSuccessful?.Invoke();
             LogoutSuccessful = null;
         }
+
+        public override void Dispose() => UserProfileRepository.Dispose();
     }
 }
