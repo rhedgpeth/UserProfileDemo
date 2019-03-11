@@ -1,4 +1,4 @@
-﻿namespace UserProfileDemo.Core.Models
+﻿namespace UserProfileDemo.Models
 {
     public class UserProfile
     {
