@@ -1,38 +1,16 @@
 ﻿using System;
-using System.IO;
 using Couchbase.Lite;
-using UserProfileDemo.Core;
 
 namespace UserProfileDemo.Respositories
 {
-    public abstract class BaseRepository : IDisposable 
+    public abstract class BaseRepository : IDisposable
     {
         string DatabaseName { get; set; }
+        ListenerToken DatabaseListenerToken { get; set; }
 
-        DatabaseConfiguration _databaseConfig;
-        DatabaseConfiguration DatabaseConfig
-        {
-            get
-            {
-                if (_databaseConfig == null)
-                {
-                    if (AppInstance.User?.Username == null)
-                    {
-                        throw new Exception($"Repository Exception: A valid user is required!");
-                    }
+        protected virtual DatabaseConfiguration DatabaseConfig { get; set; }
 
-                    _databaseConfig = new DatabaseConfiguration
-                    {
-                        Directory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                                        AppInstance.User.Username)
-                    };
-                }
-
-                return _databaseConfig;
-            }
-            set => _databaseConfig = value;
-        }
-
+        // tag::database[]
         Database _database;
         protected Database Database
         {
@@ -40,13 +18,16 @@ namespace UserProfileDemo.Respositories
             {
                 if (_database == null)
                 {
+                    // tag::databaseCreate[]
                     _database = new Database(DatabaseName, DatabaseConfig);
+                    // end::databaseCreate[]
                 }
 
                 return _database;
             }
             private set => _database = value;
         }
+        // end::database[]
 
         protected BaseRepository(string databaseName)
         {
@@ -56,13 +37,44 @@ namespace UserProfileDemo.Respositories
             }
 
             DatabaseName = databaseName;
+
+            // tag::registerForDatabaseChanges[]
+            DatabaseListenerToken = Database.AddChangeListener(OnDatabaseChangeEvent);
+            // end::registerForDatabaseChanges[]
         }
 
+        // tag::addChangeListener[]
+        void OnDatabaseChangeEvent(object sender, DatabaseChangedEventArgs e)
+        {
+            foreach (var documentId in e.DocumentIDs)
+            {
+                var document = Database?.GetDocument(documentId);
+
+                string message = $"Document (id={documentId}) was ";
+
+                if (document == null)
+                {
+                    message += "deleted";
+                }
+                else
+                {
+                    message += "added/updaAted";
+                }
+
+                Console.WriteLine(message);
+            }
+        }
+        // end::addChangeListener[]
+
+        // tag::databaseClose[]
         public void Dispose()
         {
             DatabaseConfig = null;
+
+            Database.RemoveChangeListener(DatabaseListenerToken);
             Database.Close();
             Database = null;
         }
+        // end::databaseClose[]
     }
 }

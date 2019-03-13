@@ -15,7 +15,9 @@ namespace UserProfileDemo.Core.ViewModels
         IAlertService AlertService { get; set; }
         IMediaService MediaService { get; set; }
 
-        string UserProfileId => $"user::{AppInstance.User.Username}";
+        // tag::userProfileDocId[]
+        string UserProfileDocId => $"user::{AppInstance.User.Username}";
+        // end::userProfileDocId[]
 
         string _name;
         public string Name
@@ -104,13 +106,15 @@ namespace UserProfileDemo.Core.ViewModels
 
             var userProfile = await Task.Run(() =>
             {
-                var up = UserProfileRepository?.GetUserProfile(UserProfileId);
+                // tag::getUserProfileUsingRepo[]
+                var up = UserProfileRepository?.GetUserProfile(UserProfileDocId);
+                // end::getUserProfileUsingRepo[]
 
                 if (up == null)
                 {
                     up = new UserProfile
                     {
-                        Id = UserProfileId,
+                        Id = UserProfileDocId,
                         Email = AppInstance.User.Username
                     };
                 }
@@ -133,14 +137,16 @@ namespace UserProfileDemo.Core.ViewModels
         {
             var userProfile = new UserProfile
             {
-                Id = UserProfileId,
+                Id = UserProfileDocId,
                 Name = Name,
                 Email = Email,
                 Address = Address, 
                 ImageData = ImageData
             };
 
+            // tag::saveUserProfileUsingRepo[]
             bool? success = UserProfileRepository?.SaveUserProfile(userProfile);
+            // end::saveUserProfileUsingRepo[]
 
             if (success.HasValue && success.Value)
             {

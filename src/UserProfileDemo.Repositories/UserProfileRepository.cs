@@ -1,5 +1,7 @@
 ﻿using System;
+using System.IO;
 using Couchbase.Lite;
+using UserProfileDemo.Core;
 using UserProfileDemo.Core.Respositories;
 using UserProfileDemo.Models;
 
@@ -7,15 +9,46 @@ namespace UserProfileDemo.Respositories
 {
     public sealed class UserProfileRepository : BaseRepository, IUserProfileRepository
     {
-        public UserProfileRepository() : base("cbsample")
-        { }
+        // tag::databaseconfiguration[]
+        DatabaseConfiguration _databaseConfig;
+        protected DatabaseConfiguration DatabaseConfig
+        {
+            get
+            {
+                if (_databaseConfig == null)
+                {
+                    if (AppInstance.User?.Username == null)
+                    {
+                        throw new Exception($"Repository Exception: A valid user is required!");
+                    }
 
+                    _databaseConfig = new DatabaseConfiguration
+                    {
+                        Directory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                                        AppInstance.User.Username)
+                    };
+                }
+
+                return _databaseConfig;
+            }
+            set => _databaseConfig = value;
+        }
+        // end::databaseconfiguration[]
+
+        // tag::databasename[]
+        public UserProfileRepository() : base("userprofile")
+        { }
+        // tag::databasename[]
+
+        // tag::getUserProfile[]
         public UserProfile GetUserProfile(string userProfileId)
+        // end::getUserProfile[]
         {
             UserProfile userProfile = null;
 
             try
             {
+                // tag::docfetch[]
                 var document = Database.GetDocument(userProfileId);
 
                 if (document != null)
@@ -29,6 +62,7 @@ namespace UserProfileDemo.Respositories
                         ImageData = document.GetBlob("ImageData")?.Content
                     };
                 }
+                // end::docfetch[]
             }
             catch (Exception ex)
             {
@@ -38,12 +72,15 @@ namespace UserProfileDemo.Respositories
             return userProfile;
         }
 
+        // tag::saveUserProfile[]
         public bool SaveUserProfile(UserProfile userProfile)
+        // end::saveUserProfile[]
         {
             try
             {
                 if (userProfile != null)
                 {
+                    // tag::docSet[]
                     var mutableDocument = new MutableDocument(userProfile.Id);
                     mutableDocument.SetString("Name", userProfile.Name);
                     mutableDocument.SetString("Email", userProfile.Email);
@@ -53,8 +90,11 @@ namespace UserProfileDemo.Respositories
                     {
                         mutableDocument.SetBlob("ImageData", new Blob("image/jpeg", userProfile.ImageData));
                     }
+                    // end::docSet[]
 
+                    // tag::docSave[]
                     Database.Save(mutableDocument);
+                    // end::docSave[]
 
                     return true;
                 }
