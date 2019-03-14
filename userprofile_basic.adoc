@@ -169,7 +169,7 @@ An example of a document would be
     "image":CBLBlob (image/jpg) // <1>
 }
 ```
-<1> Special link:https://developer.couchbase.com/documentation/mobile/2.0/couchbase-lite/swift.html#blobs[`Blob`] data type that is associated with the profile image.  
+<1> Special link:https://docs.couchbase.com/couchbase-lite/2.0/csharp.html#blobs[`Blob`] data type that is associated with the profile image.  
 
 === UserProfile 
 
@@ -362,8 +362,6 @@ This tutorial walked you through a very basic example of how to get up and runni
 * link:https://blog.couchbase.com/couchbase-mobile-2-0/[Introduction to Couchbase Mobile]
 
 * link:https://blog.couchbase.com/couchbase-mobile-2-0/[Couchbase Mobile 2.0 Overview]
-
-* link:https://developer.couchbase.com/documentation/mobile/2.0/couchbase-lite/swift.html#getting-started[Getting Started with Couchbase Lite in iOS]
 
 * link:https://developer.couchbase.com/documentation/mobile/2.0/couchbase-lite/index.html[Couchbase Lite Reference Guide]
 
