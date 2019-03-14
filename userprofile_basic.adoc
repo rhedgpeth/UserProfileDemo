@@ -80,15 +80,17 @@ image::https://raw.githubusercontent.com/couchbaselabs/userprofile-couchbase-mob
 +
 [source,bash] 
 ----
-  cd /path/to/UserProfileDemo/content/modules/userprofile/examples
+  cd /path/to/UserProfileDemo/src/
 
-  nuget install Couchbase.Lite
+  dotnet add UserProfileDemo.Repositories.csproj Couchbase.Lite
 ----
+
+*Note:* You can also install the package directly within Visual Studio using the link:https://docs.microsoft.com/en-us/nuget/tools/package-manager-ui[package manager].
 
 Now, let's verify the installation
 
 === Try it out
-* Open the `UserProfileDemo.sln`. The project would be located at `/path/to/UserProfileDemo/content/modules/userprofile/examples`
+* Open the `UserProfileDemo.sln`. The project would be located at `/path/to/UserProfileDemo/src`
 +
 [source,bash]
 ----
