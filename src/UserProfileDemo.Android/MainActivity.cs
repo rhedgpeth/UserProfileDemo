@@ -20,7 +20,9 @@ namespace UserProfileDemo.Droid
             base.OnCreate(savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
 
+            // tag::activate[]
             Couchbase.Lite.Support.Droid.Activate(this);
+            // end::activate[]
 
             LoadApplication(new App());
         }

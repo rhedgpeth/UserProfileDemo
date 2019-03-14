@@ -40,13 +40,9 @@ You can learn more about Couchbase Mobile https://developer.couchbase.com/mobile
 == Prerequisites
 This tutorial assumes familiarity with building link:https://www.xamarin.com[Xamarin] apps with C# and XAML.
 
-* UWP (Windows 10)
-
-* Android (7.x+) 
-
 * iOS (Xcode 10+) 
-  Download latest version from the link:https://itunes.apple.com/us/app/xcode/id497799835?mt=12[Mac App Store]
-                
+* Android (SDK 21+)
+* UWP (Windows 10)
 * git (Optional)
 This is required if you would prefer to pull the source code from GitHub repo.
 ** Create a link:https://github.com[free github account] if you don't already have one
@@ -99,20 +95,62 @@ Now, let's verify the installation
 open UserProfileDemo.sln
 ----
 +
-* Build the solution using Visual Studio (or Visual Studio for Mac on macOS).
+* Build the solution using Visual Studio for Window or Mac.
 * Run the app on a device or simulator/emulator.
-* Verify that you see the login screen
+* Verify that you see the login screen.
 +
 image::user_profile_login.png[User Profile Login Screen Image]
 
-== Initiliazing Couchbase Lite 
+== Solution Overview
+
+The User Profile demo app is a Xamarin.Forms based solution that supports iOS, Android, and UWP mobile platforms. The solution utilizes various design patterns and principles such as link:https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93viewmodel[MVVM], link:https://en.wikipedia.org/wiki/Inversion_of_control[IoC], and the Repository Pattern. 
+
+The solution consists of seven projects.
+
+* *UserProfileDemo*: A .NET Standard project responsible for maintaining view-level functionality.
+
+* *UserProfileDemo.Core*: A .NET Standard project responsible for maintaining viewmodel-level functionality.
+
+* *UserProfileDemo.Models*: A .NET Standard project consisting of simple data models.
+
+* *UserProfileDemo.Repositories*: A .NET Standard project consisting of repository classes responsible for Couchbase Lite database initilization, interaction, etc.
+
+* *UserProfileDemo.iOS*: A Xamarin.iOS platform project responsible for building the `.ipa` file.
+
+* *UserProfileDemo.Android*: A Xamarin.Android platform project responsible for building the `.apk` file.
+
+* *UserProfileDemo.UWP*: A UWP platform project responsible for building the `.exe` file.
+
+== Getting started with Couchbase Lite 
+
+In order to use Couchbase Lite within a Xamarin app the library will need to be activated for each platform. 
 
 === iOS
 
+Open link:src/UserProfileDemo.iOS/AppDelegate.cs[`AppDelegate.cs`] in the `UserProfileDemo.iOS` project. 
+
+[source,c#]
+----
+include::./src/UserProfileDemo.iOS/AppDelegate.cs[tags=activate]
+----
+
 === Android
+
+Open link:src/UserProfileDemo.Android/MainActivity.cs[`MainActivity.cs`] in the `UserProfileDemo.Android` project. 
+
+[source,c#]
+----
+include::./src/UserProfileDemo.Android/MainActivity.cs[tags=activate]
+----
 
 === UWP
 
+Open link:src/UserProfileDemo.UWP/MainPage.xaml.cs[`MainPage.xaml.cs`] in the `UserProfileDemo.UWP` project. 
+
+[source,c#]
+----
+include::./src/UserProfileDemo.UWP/MainPage.xaml.cs[tags=activate] 
+----
 
 == Data Model
 Couchbase Lite is a JSON Document Store. A Document is a logical collection of named fields and values.The values are any valid JSON types. In addition to the standard JSON types, Couchbase Lite supports `Date` and `Blob` data types. 
@@ -148,14 +186,14 @@ In this section, we will do a code walkthrough of the basic Database operations
 === Create / Open a Database
 When a user logs in, we create an empty Couchbase Lite database for the user if one does not exist.
 
-* Open the *BaseRepository.cs* file and locate the `Database` property. When the `Database` property is used for the first time a Couchbase Lite database will be opened, or created if it does not already exist via the instantiation of a new object.
+* Open the link:src/UserProfileDemo.Repositories/BaseRepository.cs[*BaseRepository.cs*] file and locate the `Database` property. When the `Database` property is used for the first time a Couchbase Lite database will be opened, or created if it does not already exist via the instantiation of a new object.
 +
 [source,c#]
 ----
 include::./src/UserProfileDemo.Repositories/BaseRepository.cs[tags=database]
 ----
 
-* We create an instance of the `DatabaseConfiguration` within `UserProfileRepository` via an `abstract` requirement from the parent class, `BaseRepository`. This is an optional step. In our case, we would like to override the default path of the database. Every user has their own instance of the Database that is located in a folder corresponding to the user. Please note that the default path is platform specific.
+* We create an instance of the `DatabaseConfiguration` within link:src/UserProfileDemo.Repositories/UserProfileRepository.cs[*UserProfileRepository.cs*] via an `abstract` requirement from the parent class, `BaseRepository`. This is an optional step. In our case, we would like to override the default path of the database. Every user has their own instance of the Database that is located in a folder corresponding to the user. Please note that the default path is platform specific.
 +
 [source,c#]
 ---- 
@@ -172,7 +210,7 @@ include::./src/UserProfileDemo.Repositories/BaseRepository.cs[tags=databasecreat
 === Listening to Database Changes
 You can be asynchornously notified of any change (add, delete, update) to the Database by registering a change listener with the Database. In our app, we are not doing anything special with the Database change notification other than logging the change. In a real world app, you would use this notification for instance, to update the UI.
 
-* Open the *BaseRepository.cs* file and locate the `Database.AddChangeListener` function usage within the constructor. To register a change listener with the database we add the delegate method `OnDatabaseChangeEvent`. This is an optional step. The `AddChangeListener` method returns a `ListenerToken`. The `ListenerToken` is required to remove the listener from the database.
+* Open the link:src/UserProfileDemo.Repositories/BaseRepository.cs[*BaseRepository.cs*] file and locate the `Database.AddChangeListener` function usage within the constructor. To register a change listener with the database we add the delegate method `OnDatabaseChangeEvent`. This is an optional step. The `AddChangeListener` method returns a `ListenerToken`. The `ListenerToken` is required to remove the listener from the database.
 [source,c#]
 +
 ----
@@ -186,30 +224,14 @@ include::./src/UserProfileDemo.Repositories/BaseRepository.cs[tags=registerForDa
 include::./src/UserProfileDemo.Repositories/BaseRepository.cs[tags=addChangeListener]
 ----
 
-=== Closing the Database
+=== Disposing of the Repository
 When a user logs out, we close the Couchbase Lite database associated with the user, deregister any database change listeners, and free up memory allocations.
 
-Open the *BaseRepository.cs* file and locate the `Dispose` method. In our sample `Dispose` handles the removal of database listeners, removing various objects from memory, and closing the database.  `Dispose` will be called when a user logs out. 
+Open the link:src/UserProfileDemo.Repositories/BaseRepository.cs[*BaseRepository.cs*] file and locate the `Dispose` method. In our sample `Dispose` handles the removal of database listeners, removing various objects from memory, and closing the database.  `Dispose` will be called when a user logs out. 
 
 [source,c#] 
 ----
 include::./src/UserProfileDemo.Repositories/BaseRepository.cs[tags=databaseClose]
-----
-
-=== Deregistering for  Database Changes
-
-* Open the *DatabaseManager.swift* file and locate the `deregisterForDatabaseChanges()` function. 
-+
-[source,swift]
-----
-include::{examplesdir}/UserProfileDemo/model/DatabaseManager.swift[tags=deregisterForDatabaseChanges]
-----
-
-* We stop listening to database changes by passing in the `ListenerToken` associated with the listener.
-+
-[source,swift]
-----
-include::{examplesdir}/UserProfileDemo/model/DatabaseManager.swift[tags=removedbchangelistener]
 ----
 
 === Try it out
@@ -234,7 +256,7 @@ Once an instance of the Couchbase Lite database is created/opened for the specif
 === Reading a Document
 Once the user logs in, the user is taken to the "Your Profile" screen. A request is made to load  <<The "User Profile" Document>>  for the user. When the user logs in the very first time, there would be no _user profile_ document for the user.
 
-* Open the *UserProfileViewModel.cs* file and locate the `userProfileDocId` definition. This document Id is constructed by prefixing the term "user::" to the username of the user.
+* Open the link:src/UserProfileDemo.Core/ViewModels/UserProfileViewModel.cs[*UserProfileViewModel.cs*] file and locate the `userProfileDocId` definition. This document Id is constructed by prefixing the term "user::" to the username of the user.
 +
 [source,c#]
 ----
@@ -248,7 +270,7 @@ include::./src/UserProfileDemo.Core/ViewModels/UserProfileViewModel.cs[tags=user
 include::./src/UserProfileDemo.Core/ViewModels/UserProfileViewModel.cs[tags=getUserProfileUsingRepo] 
 ----
 
-* In the *UserProfileRepository.cs* file, locate the `GetUserProfile` function.
+* In the link:src/UserProfileDemo.Repositories/UserProfileRepository.cs[*UserProfileRepository.cs*] file, locate the `Get` function.
 +
 [source,c#]
 ----
@@ -277,13 +299,12 @@ The function below applies whether you are creating a document or updating an ex
 include::./src/UserProfileDemo.Core/ViewModels/UserProfileViewModel.cs[tags=saveUserProfileUsingRepo] 
 ----
 
-* Open the *UserProfileRepository.cs* file and locate the `SaveUserProfile` method.
+* Open the link:src/UserProfileDemo.Repositories/UserProfileRepository.cs[*UserProfileRepository.cs*] file and locate the `Save` function.
 + 
 [source,c#]
 ----
 include::./src/UserProfileDemo.Repositories/UserProfileRepository.cs[tags=saveUserProfile]
 ----
-
 
 * We create a *mutable* instance of the Document. By default, all APIs in Couchbase Lite deal with immutable objects, thereby making them *thread-safe* by design. In order to mutate an object, you must explicitly get a mutable copy of the object.
 Use appropriate type-setters to set the various properties of the Document  
@@ -296,7 +317,7 @@ include::./src/UserProfileDemo.Repositories/UserProfileRepository.cs[tags=docSet
 
 * Save the document
 +
-[source,swift]
+[source,c#]
 ----
 include::./src/UserProfileDemo.Repositories/UserProfileRepository.cs[tags=docSave]
 ----
@@ -335,7 +356,7 @@ image::https://raw.githubusercontent.com/couchbaselabs/userprofile-couchbase-mob
 == Learn More
 Congratulations on completing this tutorial!
 
-This tutorial walked you through a very basic example of how to get up and running with Couchbase Lite as a local-only, standalone embedded data store in your iOS app. If you want to learn more about Couchbase Mobile 2.x, check out the following links.
+This tutorial walked you through a very basic example of how to get up and running with Couchbase Lite as a local-only, standalone embedded data store in your iOS, Android, or UWP app. If you want to learn more about Couchbase Mobile 2.x, check out the following links.
 
 === Further Reading
 * link:https://blog.couchbase.com/couchbase-mobile-2-0/[Introduction to Couchbase Mobile]

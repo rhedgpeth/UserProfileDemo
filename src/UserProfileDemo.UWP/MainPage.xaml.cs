@@ -26,7 +26,9 @@ namespace UserProfileDemo.UWP
         {
             this.InitializeComponent();
 
+            // tag::activate[]
             Couchbase.Lite.Support.UWP.Activate();
+            // end::activate[]
 
             LoadApplication(new UserProfileDemo.App());
         }

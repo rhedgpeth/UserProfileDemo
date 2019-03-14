@@ -7,11 +7,11 @@ using UserProfileDemo.Models;
 
 namespace UserProfileDemo.Respositories
 {
-    public sealed class UserProfileRepository : BaseRepository, IUserProfileRepository
+    public sealed class UserProfileRepository : BaseRepository<UserProfile, string>, IUserProfileRepository
     {
         // tag::databaseconfiguration[]
         DatabaseConfiguration _databaseConfig;
-        protected DatabaseConfiguration DatabaseConfig
+        protected override DatabaseConfiguration DatabaseConfig
         {
             get
             {
@@ -41,7 +41,7 @@ namespace UserProfileDemo.Respositories
         // tag::databasename[]
 
         // tag::getUserProfile[]
-        public UserProfile GetUserProfile(string userProfileId)
+        public override UserProfile Get(string userProfileId)
         // end::getUserProfile[]
         {
             UserProfile userProfile = null;
@@ -73,7 +73,7 @@ namespace UserProfileDemo.Respositories
         }
 
         // tag::saveUserProfile[]
-        public bool SaveUserProfile(UserProfile userProfile)
+        public override bool Save(UserProfile userProfile)
         // end::saveUserProfile[]
         {
             try

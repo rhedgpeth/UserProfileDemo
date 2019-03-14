@@ -24,7 +24,9 @@ namespace UserProfileDemo.iOS
         {
             global::Xamarin.Forms.Forms.Init();
 
+            // tag::activate[]
             Couchbase.Lite.Support.iOS.Activate();
+            // end::activate[]
 
             LoadApplication(new App());
 

@@ -1,11 +1,10 @@
-﻿using System;
-using UserProfileDemo.Models;
+﻿using UserProfileDemo.Models;
 
 namespace UserProfileDemo.Core.Respositories
 {
-    public interface IUserProfileRepository : IDisposable
+    public interface IUserProfileRepository : IRepository<UserProfile, string>
     {
-        UserProfile GetUserProfile(string userProfileId);
-        bool SaveUserProfile(UserProfile userProfile);
+        new UserProfile Get(string userProfileId);
+        new bool Save(UserProfile userProfile);
     }
 }

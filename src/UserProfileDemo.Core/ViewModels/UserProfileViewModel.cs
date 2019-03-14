@@ -107,7 +107,7 @@ namespace UserProfileDemo.Core.ViewModels
             var userProfile = await Task.Run(() =>
             {
                 // tag::getUserProfileUsingRepo[]
-                var up = UserProfileRepository?.GetUserProfile(UserProfileDocId);
+                var up = UserProfileRepository?.Get(UserProfileDocId);
                 // end::getUserProfileUsingRepo[]
 
                 if (up == null)
@@ -145,7 +145,7 @@ namespace UserProfileDemo.Core.ViewModels
             };
 
             // tag::saveUserProfileUsingRepo[]
-            bool? success = UserProfileRepository?.SaveUserProfile(userProfile);
+            bool? success = UserProfileRepository?.Save(userProfile);
             // end::saveUserProfileUsingRepo[]
 
             if (success.HasValue && success.Value)

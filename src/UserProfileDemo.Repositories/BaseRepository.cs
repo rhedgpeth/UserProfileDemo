@@ -1,9 +1,10 @@
 ﻿using System;
 using Couchbase.Lite;
+using UserProfileDemo.Core.Respositories;
 
 namespace UserProfileDemo.Respositories
 {
-    public abstract class BaseRepository : IDisposable
+    public abstract class BaseRepository<T,K> : IRepository<T,K> where T : class
     {
         string DatabaseName { get; set; }
         ListenerToken DatabaseListenerToken { get; set; }
@@ -76,5 +77,8 @@ namespace UserProfileDemo.Respositories
             Database = null;
         }
         // end::databaseClose[]
+
+        public abstract T Get(K id);
+        public abstract bool Save(T obj);
     }
 }
