@@ -173,7 +173,7 @@ An example of a document would be
 
 === UserProfile 
 
-The _"user"_ Document is encoded to a class named _UserProfile_.
+The _"user"_ Document is encoded to a class named _UserProfile_ that resides in the link:src/UserProfileDemo.Models/[UserProfileDemo.Models] project.
 
 [source,c#]
 ----
