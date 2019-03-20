@@ -63,7 +63,7 @@ image::https://raw.githubusercontent.com/couchbaselabs/userprofile-couchbase-mob
 
 ==== Option 1 : Git Clone
 
-- Clone the *_standalone_* branch of the `User Profile Demo` project from GitHub. Type the following command in your terminal
+- Clone the *_standalone_* branch of the `User Profile Demo` solution from GitHub. Assuming that you have link:https://git-scm.com/downloads[Git] installed you can use the following command to clone the solution:
 +
 [source,bash] 
 ----
@@ -72,32 +72,19 @@ image::https://raw.githubusercontent.com/couchbaselabs/userprofile-couchbase-mob
 
 ==== Option 2 : Download .zip
 
-- Download the  `User Profile Demo` project from link:https://github.com/couchbaselabs/userprofile-couchbase-mobile-xamarin/archive/standalone.zip[here]
+- Download the  `User Profile Demo` solution directly from link:https://github.com/couchbaselabs/userprofile-couchbase-mobile-xamarin/archive/standalone.zip[here].
 
-=== Installing Couchbase Lite Framework
-
-- Next, we will download the Couchbase Lite 2.0 framework. The Couchbase Lite Nuget package is link:hhttps://www.nuget.org/packages/Couchbase.Lite/[distributed] via Nuget.org. In our example, we will be downloading the pre-built version of the framework. For this, do the following
-+
-[source,bash] 
-----
-  cd /path/to/UserProfileDemo/src/
-
-  dotnet add UserProfileDemo.Repositories.csproj Couchbase.Lite
-----
-
-*Note:* You can also install the package directly within Visual Studio using the link:https://docs.microsoft.com/en-us/nuget/tools/package-manager-ui[package manager].
-
-Now, let's verify the installation
+Once all of the solution bits have been retrieved you can verify the installation, and run the app!
 
 === Try it out
-* Open the `UserProfileDemo.sln`. The project would be located at `/path/to/UserProfileDemo/src`
+* Open the `UserProfileDemo.sln`. The project would be located at `/path/to/UserProfileDemo/src`.
 +
 [source,bash]
 ----
 open UserProfileDemo.sln
 ----
 +
-* Build the solution using Visual Studio for Window or Mac.
+* Build the solution using your preferred IDE (e.g. Visual Studio for Windows or Mac).
 * Run the app on a device or simulator/emulator.
 * Verify that you see the login screen.
 +
@@ -123,9 +110,22 @@ The solution consists of seven projects.
 
 * *UserProfileDemo.UWP*: A UWP platform project responsible for building the `.exe` file.
 
+Now that you have an understanding of the solution architecture let's dive into the app!
+
+== Couchbase Lite Nuget
+
+Before diving into the code for the apps, it is important to point out the Couchbase Lite dependencies within the solution. The link:https://www.nuget.org/packages/Couchbase.Lite/[Couchbase.Lite Nuget package] is included as a reference within three projects of this solution:
+
+<1> UserProfileDemo.Repositories
+<2> UserProfileDemo.iOS
+<3> UserProfileDemo.Android
+<4> UserProfileDemo.UWP
+
+The `Couchbase.Lite` Nuget package contains the core functionality for Couchbase Lite. In the following sections you will dive into the capabilities it the package provides.
+
 == Getting started with Couchbase Lite 
 
-In order to use Couchbase Lite within a Xamarin app the library will need to be activated for each platform. 
+In order to use Couchbase Lite within a Xamarin app the previously mentioned Couchbase.Lite Nuget package will need to be activated for each platform. 
 
 === iOS
 
@@ -153,6 +153,8 @@ Open link:src/UserProfileDemo.UWP/MainPage.xaml.cs[`MainPage.xaml.cs`] in the `U
 ----
 include::./src/UserProfileDemo.UWP/MainPage.xaml.cs[tags=activate] 
 ----
+
+Now that the `Couchbase.Lite` component has been activated you are ready to start taking advantage of a variety of features. However, before diving into the cabilities offered through `Couchbase.Lite` let's take a look at the foundations of Couchbase; data models and documents.
 
 == Data Model
 Couchbase Lite is a JSON Document Store. A Document is a logical collection of named fields and values.The values are any valid JSON types. In addition to the standard JSON types, Couchbase Lite supports `Date` and `Blob` data types. 
