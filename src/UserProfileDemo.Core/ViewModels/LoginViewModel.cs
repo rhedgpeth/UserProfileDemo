@@ -14,7 +14,6 @@ namespace UserProfileDemo.Core.ViewModels
             set
             {
                 SetPropertyChanged(ref _username, value);
-                SetPropertyChanged(nameof(CanSignIn));
             }
         }
 
@@ -25,11 +24,8 @@ namespace UserProfileDemo.Core.ViewModels
             set
             {
                 SetPropertyChanged(ref _password, value);
-                SetPropertyChanged(nameof(CanSignIn));
             }
         }
-
-        public bool CanSignIn => !string.IsNullOrEmpty(Username) && !string.IsNullOrEmpty(Password);
 
         ICommand _signInCommand;
         public ICommand SignInCommand
