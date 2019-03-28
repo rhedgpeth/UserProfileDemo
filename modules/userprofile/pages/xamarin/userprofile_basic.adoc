@@ -133,7 +133,7 @@ Open link:src/UserProfileDemo.iOS/AppDelegate.cs[`AppDelegate.cs`] in the `UserP
 
 [source,c#]
 ----
-include::./src/UserProfileDemo.iOS/AppDelegate.cs[tags=activate]
+include::{examplesdir}/src/UserProfileDemo.iOS/AppDelegate.cs[tags=activate,indent=0]
 ----
 
 === Android
@@ -142,7 +142,7 @@ Open link:src/UserProfileDemo.Android/MainActivity.cs[`MainActivity.cs`] in the 
 
 [source,c#]
 ----
-include::./src/UserProfileDemo.Android/MainActivity.cs[tags=activate]
+include::{examplesdir}/src/UserProfileDemo.Android/MainActivity.cs[tags=activate,indent=0]
 ----
 
 === UWP
@@ -151,7 +151,7 @@ Open link:src/UserProfileDemo.UWP/MainPage.xaml.cs[`MainPage.xaml.cs`] in the `U
 
 [source,c#]
 ----
-include::./src/UserProfileDemo.UWP/MainPage.xaml.cs[tags=activate] 
+include::{examplesdir}/src/UserProfileDemo.UWP/MainPage.xaml.cs[tags=activate,indent=0]
 ----
 
 Now that the `Couchbase.Lite` component has been activated you are ready to start taking advantage of a variety of features. However, before diving into the cabilities offered through `Couchbase.Lite` let's take a look at the foundations of Couchbase; data models and documents.
@@ -181,7 +181,7 @@ The _"user"_ Document is encoded to a class named _UserProfile_ that resides in 
 
 [source,c#]
 ----
-include::./src/UserProfileDemo.Models/UserProfile.cs[tags=userprofile]
+include::{examplesdir}/src/UserProfileDemo.Models/UserProfile.cs[tags=userprofile,indent=0]
 ----
 
 == Basic Database Operations
@@ -194,21 +194,21 @@ When a user logs in, we create an empty Couchbase Lite database for the user if 
 +
 [source,c#]
 ----
-include::./src/UserProfileDemo.Repositories/BaseRepository.cs[tags=database]
+include::{examplesdir}/src/UserProfileDemo.Repositories/BaseRepository.cs[tags=database,indent=0]
 ----
 
 * We create an instance of the `DatabaseConfiguration` within link:src/UserProfileDemo.Repositories/UserProfileRepository.cs[*UserProfileRepository.cs*] via an `abstract` requirement from the parent class, `BaseRepository`. This is an optional step. In our case, we would like to override the default path of the database. Every user has their own instance of the Database that is located in a folder corresponding to the user. Please note that the default path is platform specific.
 +
 [source,c#]
 ---- 
-include::./src/UserProfileDemo.Repositories/UserProfileRepository.cs[tags=databaseconfiguration]
+include::{examplesdir}/src/UserProfileDemo.Repositories/UserProfileRepository.cs[tags=databaseconfiguration,indent=0]
 ----
 
 * A local Couchbase Lite database named *_"userprofile"_* for the user. If a database already exists for the user, the existing version is returned.
 + 
 [source,c#] 
 ----
-include::./src/UserProfileDemo.Repositories/BaseRepository.cs[tags=databasecreate]
+include::{examplesdir}/src/UserProfileDemo.Repositories/BaseRepository.cs[tags=databasecreate,indent=0]
 ---- 
 
 === Listening to Database Changes
@@ -218,14 +218,14 @@ You can be asynchornously notified of any change (add, delete, update) to the Da
 [source,c#]
 +
 ----
-include::./src/UserProfileDemo.Repositories/BaseRepository.cs[tags=registerForDatabaseChanges]
+include::{examplesdir}/src/UserProfileDemo.Repositories/BaseRepository.cs[tags=registerForDatabaseChanges,indent=0]
 ----
 
 * The listener is a delegate method that takes two parameters of type `object` and `DatabaseChangedEventArgs` respectively. 
 +
 [source,c#] 
 ---- 
-include::./src/UserProfileDemo.Repositories/BaseRepository.cs[tags=addChangeListener]
+include::{examplesdir}/src/UserProfileDemo.Repositories/BaseRepository.cs[tags=addChangeListener,indent=0]
 ----
 
 === Disposing of the Repository 
@@ -235,7 +235,7 @@ Open the link:src/UserProfileDemo.Repositories/BaseRepository.cs[*BaseRepository
 
 [source,c#] 
 ----
-include::./src/UserProfileDemo.Repositories/BaseRepository.cs[tags=databaseClose]
+include::{examplesdir}/src/UserProfileDemo.Repositories/BaseRepository.cs[tags=databaseClose,indent=0]
 ----
 
 === Try it out
@@ -264,28 +264,28 @@ Once the user logs in, the user is taken to the "Your Profile" screen. A request
 +
 [source,c#]
 ----
-include::./src/UserProfileDemo.Core/ViewModels/UserProfileViewModel.cs[tags=userProfileDocId] 
+include::{examplesdir}/src/UserProfileDemo.Core/ViewModels/UserProfileViewModel.cs[tags=userProfileDocId,indent=0]
 ----
 
 * The `UserProfileViewModel` is tasked with retrieving the profile for a logged in user. It does this by using a class that implements `IUserProfileRepository`.
 +
 [source,c#]
 ----
-include::./src/UserProfileDemo.Core/ViewModels/UserProfileViewModel.cs[tags=getUserProfileUsingRepo] 
+include::{examplesdir}/src/UserProfileDemo.Core/ViewModels/UserProfileViewModel.cs[tags=getUserProfileUsingRepo,indent=0]
 ----
 
 * In the link:src/UserProfileDemo.Repositories/UserProfileRepository.cs[*UserProfileRepository.cs*] file, locate the `Get` function.
 +
 [source,c#]
 ----
-include::./src/UserProfileDemo.Repositories/UserProfileRepository.cs[tags=getUserProfile]
+include::{examplesdir}/src/UserProfileDemo.Repositories/UserProfileRepository.cs[tags=getUserProfile,indent=0]
 ----
 
 * We try to fetch the document with specified `userProfileDocId` from the database.
 +
 [source,c#] 
 ----
-include::./src/UserProfileDemo.Repositories/UserProfileRepository.cs[tags=docfetch]
+include::{examplesdir}/src/UserProfileDemo.Repositories/UserProfileRepository.cs[tags=docfetch,indent=0]
 ----
 <1> Fetch an *immutable* copy of the Document from the database.
 <2> Create an instance of <<UserProfile>> object.
@@ -300,14 +300,14 @@ The function below applies whether you are creating a document or updating an ex
 +
 [source,c#]
 ----
-include::./src/UserProfileDemo.Core/ViewModels/UserProfileViewModel.cs[tags=saveUserProfileUsingRepo] 
+include::{examplesdir}/src/UserProfileDemo.Core/ViewModels/UserProfileViewModel.cs[tags=saveUserProfileUsingRepo,indent=0]
 ----
 
 * Open the link:src/UserProfileDemo.Repositories/UserProfileRepository.cs[*UserProfileRepository.cs*] file and locate the `Save` function.
 + 
 [source,c#]
 ----
-include::./src/UserProfileDemo.Repositories/UserProfileRepository.cs[tags=saveUserProfile]
+include::{examplesdir}/src/UserProfileDemo.Repositories/UserProfileRepository.cs[tags=saveUserProfile,indent=0]
 ----
 
 * We create a *mutable* instance of the Document. By default, all APIs in Couchbase Lite deal with immutable objects, thereby making them *thread-safe* by design. In order to mutate an object, you must explicitly get a mutable copy of the object.
@@ -315,7 +315,7 @@ Use appropriate type-setters to set the various properties of the Document
 +
 [source,c#]
 ----
-include::./src/UserProfileDemo.Repositories/UserProfileRepository.cs[tags=docSet]
+include::{examplesdir}/src/UserProfileDemo.Repositories/UserProfileRepository.cs[tags=docSet,indent=0]
 ----
 <1> Specifically, note the support of the `SetBlob` type to fetch the value of a property of type `Blob`.
 
@@ -323,7 +323,7 @@ include::./src/UserProfileDemo.Repositories/UserProfileRepository.cs[tags=docSet
 +
 [source,c#]
 ----
-include::./src/UserProfileDemo.Repositories/UserProfileRepository.cs[tags=docSave]
+include::{examplesdir}/src/UserProfileDemo.Repositories/UserProfileRepository.cs[tags=docSave,indent=0]
 ----
 
 
