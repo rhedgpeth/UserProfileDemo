@@ -208,7 +208,7 @@ include::{examplesdir}/src/UserProfileDemo.Repositories/UserProfileRepository.cs
 + 
 [source,c#] 
 ----
-include::{examplesdir}/src/UserProfileDemo.Repositories/BaseRepository.cs[tags=databasecreate,indent=0]
+include::{examplesdir}/src/UserProfileDemo.Repositories/BaseRepository.cs[tags=databaseCreate,indent=0]
 ---- 
 
 === Listening to Database Changes
