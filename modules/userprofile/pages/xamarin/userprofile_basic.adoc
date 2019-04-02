@@ -49,9 +49,7 @@ This is required if you would prefer to pull the source code from GitHub repo.
 ** git can be downloaded from link:https://git-scm.com/book/en/v2/Getting-Started-Installing-Git[git-scm.org]
 
 == App Overview
-We will be working with a very simple app. It does one thing -
-
-* Allows users to log in and create or update his/her user profile information
+In this tutorial you will be working with an app that allows users to log in and make changes to their user profile information.
 
 The user profile information is persisted as a Document in the local Couchbase Lite Database. So subsquently, when the user logs out and logs back in again, the profile information is loaded from the Database.
 
@@ -114,7 +112,7 @@ Now that you have an understanding of the solution architecture let's dive into 
 
 == Couchbase Lite Nuget
 
-Before diving into the code for the apps, it is important to point out the Couchbase Lite dependencies within the solution. The link:https://www.nuget.org/packages/Couchbase.Lite/[Couchbase.Lite Nuget package] is included as a reference within three projects of this solution:
+Before diving into the code for the apps, it is important to point out the Couchbase Lite dependencies within the solution. The link:https://www.nuget.org/packages/Couchbase.Lite/[Couchbase.Lite Nuget package] is included as a reference within four projects of this solution:
 
 <1> UserProfileDemo.Repositories
 <2> UserProfileDemo.iOS
